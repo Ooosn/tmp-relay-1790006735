@@ -69,7 +69,7 @@ def main():
         c,R,ext,fz=robust_frame(objs)
     center=Vector(c); R=max(float(R),1e-3)
     if a.floor:
-        bpy.ops.mesh.primitive_plane_add(size=float(max(ext))*20.0,location=(center.x,center.y,fz))
+        bpy.ops.mesh.primitive_plane_add(size=float(max(ext))*60.0,location=(center.x,center.y,fz))
         fl=bpy.context.active_object; fm=bpy.data.materials.new('floor'); fm.use_nodes=True; fb=fm.node_tree.nodes.get('Principled BSDF')
         si(fb.inputs,'Base Color',(0.95,0.95,0.96,1.0)); si(fb.inputs,'Roughness',0.75); si(fb.inputs,'Specular IOR Level',0.4) or si(fb.inputs,'Specular',0.4)
         fl.data.materials.append(fm)
