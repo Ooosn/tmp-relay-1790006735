@@ -46,9 +46,9 @@ def main():
     objs=import_mesh(a.glb)
     if not objs: print('NO_MESH'); sys.exit(1)
     mat=bpy.data.materials.new('obj'); mat.use_nodes=True; nt=mat.node_tree; b=nt.nodes.get('Principled BSDF')
-    si(b.inputs,'Roughness',0.30); si(b.inputs,'Metallic',0.0)
-    si(b.inputs,'Specular IOR Level',0.72) or si(b.inputs,'Specular',0.72)
-    si(b.inputs,'Coat Weight',0.18); si(b.inputs,'Coat Roughness',0.10)
+    si(b.inputs,'Roughness',0.34); si(b.inputs,'Metallic',0.0)
+    si(b.inputs,'Specular IOR Level',0.55) or si(b.inputs,'Specular',0.55)
+    si(b.inputs,'Coat Weight',0.10); si(b.inputs,'Coat Roughness',0.10)
     have_vc=False; cname='Color'
     for o in objs:
         ca=getattr(o.data,'color_attributes',None)
@@ -73,11 +73,11 @@ def main():
     bpy.context.scene.collection.objects.link(cam); bpy.context.scene.camera=cam
     dist=max(R*a.margin/math.tan(cd.angle/2.0),1e-3)
     w=bpy.data.worlds.new('w'); bpy.context.scene.world=w; w.use_nodes=True
-    bg=w.node_tree.nodes.get('Background'); bg.inputs[0].default_value=(0.96,0.96,0.97,1.0); bg.inputs[1].default_value=0.85
+    bg=w.node_tree.nodes.get('Background'); bg.inputs[0].default_value=(0.96,0.96,0.97,1.0); bg.inputs[1].default_value=0.28
     def sun(nm,en,ang=0.30):
         L=bpy.data.lights.new(nm,'SUN'); L.energy=en; L.angle=ang; ob=bpy.data.objects.new(nm,L); bpy.context.scene.collection.objects.link(ob); return ob
-    key=sun('key',4.6,0.22); fill=sun('fill',1.4,0.55); rim=sun('rim',2.4,0.2)
-    al=bpy.data.lights.new('top','AREA'); al.energy=R*R*900.0; al.size=R*3.0; al.shape='DISK'
+    key=sun('key',2.7,0.22); fill=sun('fill',0.85,0.55); rim=sun('rim',1.5,0.2)
+    al=bpy.data.lights.new('top','AREA'); al.energy=R*R*260.0; al.size=R*3.0; al.shape='DISK'
     alo=bpy.data.objects.new('top',al); bpy.context.scene.collection.objects.link(alo)
     alo.location=(center.x,center.y,center.z+R*2.6); alo.rotation_euler=(0,0,0)
     sc=bpy.context.scene; sc.render.engine=a.engine; sc.render.resolution_x=a.res; sc.render.resolution_y=a.res
@@ -88,7 +88,7 @@ def main():
         try: sc.view_settings.view_transform='Filmic'
         except Exception: pass
     sc.view_settings.look='None'
-    try: sc.view_settings.exposure=0.3
+    try: sc.view_settings.exposure=-0.75
     except Exception: pass
     if a.engine=='BLENDER_EEVEE':
         ev=sc.eevee
