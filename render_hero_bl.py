@@ -55,7 +55,11 @@ def main():
         if ca and len(ca)>0: have_vc=True; cname=ca[0].name; break
     if a.vc and have_vc:
         vcn=nt.nodes.new('ShaderNodeVertexColor'); vcn.layer_name=cname
-        nt.links.new(vcn.outputs['Color'],b.inputs['Base Color'])
+        hs=nt.nodes.new('ShaderNodeHueSaturation')
+        try: hs.inputs['Saturation'].default_value=1.5
+        except Exception: pass
+        nt.links.new(vcn.outputs['Color'],hs.inputs['Color'])
+        nt.links.new(hs.outputs['Color'],b.inputs['Base Color'])
     for o in objs: o.data.materials.clear(); o.data.materials.append(mat)
     c,R,ext,fz=robust_frame(objs)
     up_axis=int(np.argmax(ext)) if a.up=='auto' else {'x':0,'y':1,'z':2}[a.up]
@@ -88,7 +92,7 @@ def main():
         try: sc.view_settings.view_transform='Filmic'
         except Exception: pass
     sc.view_settings.look='None'
-    try: sc.view_settings.exposure=-0.75
+    try: sc.view_settings.exposure=-0.55
     except Exception: pass
     if a.engine=='BLENDER_EEVEE':
         ev=sc.eevee
